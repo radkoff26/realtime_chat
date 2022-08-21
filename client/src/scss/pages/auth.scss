@@ -1,0 +1,82 @@
+.auth_page {
+  display: flex;
+  width: 40vw;
+  flex-flow: column nowrap;
+  padding-top: 10vh;
+  align-items: center;
+  gap: 10vh;
+
+  .form_container {
+    display: flex;
+    width: 70%;
+    flex-flow: column nowrap;
+    background-color: rgba(0, 0, 0, 0.25);
+
+    &__controls {
+      display: flex;
+      width: 100%;
+
+      div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-grow: 1;
+        padding: 8px 0;
+        cursor: pointer;
+        transition: .1s;
+        background-color: transparent;
+        font-size: 20px;
+
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        &.active {
+          background-color: rgba(0, 0, 0, 0.5) !important;
+        }
+      }
+    }
+
+    &__form {
+      display: flex;
+      flex-flow: column nowrap;
+      align-items: center;
+
+      input {
+        border: none;
+        outline: none;
+        width: 80%;
+        background-color: rgba(0, 0, 0, 0.2);
+        color: #FFFFFF;
+        padding: 8px 12px;
+        font-size: 20px;
+
+        &::placeholder {
+          color: #cccccc;
+        }
+      }
+
+      .error {
+        width: 80%;
+        text-align: center;
+        color: rgba(255, 0, 0, 0.7);
+        font-weight: 600;
+      }
+
+      input, button {
+        margin: 8px;
+      }
+
+      button {
+        width: fit-content;
+        padding: 8px 12px;
+        font-size: 22px;
+        transition: .3s;
+
+        &:hover {
+          background-color: #43a050;
+        }
+      }
+    }
+  }
+}

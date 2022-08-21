@@ -1,0 +1,21 @@
+@import "variables";
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  color: $white;
+  font-family: 'Inter', sans-serif;
+}
+
+a {
+  text-decoration: none;
+}
+
+#root {
+  display: flex;
+  min-height: 100vh;
+  width: 100vw;
+  background: $gradient;
+  justify-content: center;
+}

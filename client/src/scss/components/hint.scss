@@ -1,0 +1,48 @@
+@import "../variables";
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+
+  20% {
+    opacity: 0.1;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.hint {
+  display: inline;
+  position: relative;
+  cursor: default;
+  overflow: hidden;
+
+  &_sign {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+    border: 2px solid $gray;
+    font-weight: 800;
+    color: $gray;
+  }
+
+  &_text {
+    display: inline;
+    width: 250px;
+    position: absolute;
+    top: -6px;
+    left: 30px;
+    background-color: $gray;
+    border-radius: 4px;
+    padding: 8px;
+    margin-left: 8px;
+    opacity: 0;
+    animation: fadeIn 1s ease forwards;
+  }
+}

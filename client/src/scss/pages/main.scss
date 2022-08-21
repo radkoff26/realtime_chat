@@ -1,0 +1,30 @@
+@import "../variables";
+
+.main_page {
+  display: flex;
+  flex-flow: column nowrap;
+  width: 100%;
+  min-height: 100vh;
+  background: $gradient;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 200px;
+  padding-top: 10vh;
+
+  &__logout {
+    height: fit-content;
+    width: fit-content;
+    position: absolute;
+    top: 24px;
+    right: 24px;
+  }
+
+  &__links {
+    display: flex;
+    flex-flow: column nowrap;
+
+    a:not(:last-child) {
+      margin-bottom: 32px;
+    }
+  }
+}
