@@ -1,11 +1,27 @@
-import React, {useState} from 'react';
+import React, {useEffect, useLayoutEffect, useState} from 'react';
 import Title from "../components/design/Title";
 import Login from "../components/business/Login";
 import Register from "../components/business/Register";
 import '../scss/pages/auth.scss'
+import {useAppSelector} from "../hooks/UseAppSelector";
+import {useNavigate} from "react-router-dom";
 
 const AuthPage = () => {
     const [isRegister, setRegister] = useState(false)
+    const selector = useAppSelector(state => state.authReducer)
+    const navigate = useNavigate()
+
+    useLayoutEffect(() => {
+        if (selector.isLoggedIn) {
+            navigate('/')
+        }
+    }, [])
+
+    useEffect(() => {
+        if (selector.isLoggedIn) {
+            navigate('/')
+        }
+    }, [selector, navigate])
 
     return (
         <div className='auth_page'>

@@ -2,6 +2,7 @@ export interface RegistrationExodus {
     hasManaged: boolean
 }
 
-export interface LoginExodus {
-    isLoggedIn: boolean
+export interface LoginError {
+    error: boolean
+    message: string
 }

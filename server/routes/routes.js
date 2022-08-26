@@ -5,83 +5,100 @@ import {generateId, generateToken} from "../helpers/generator.js";
 import Chat from '../models/chat.js'
 import Message from '../models/message.js'
 import {dayPassed} from "../helpers/date_functions.js";
+import message from "../models/message.js";
+
+class Error {
+    constructor(message) {
+        this.isLoggedIn = false
+        this.error = true
+        this.message = message
+    }
+}
+
+function execute(callback, onError) {
+    try {
+        callback()
+    } catch (e) {
+        onError(e)
+    }
+}
+
+const executor = (res, callback) => {
+    return execute(callback, (e) => {
+        console.log(e);
+        res.json(new Error(e.message))
+    })
+}
 
 async function dbIncludesCollection(db, collectionName) {
     const collections = await db.collections()
     return collections.filter(value => value.collectionName === collectionName).length > 0
 }
 
+
 export default function (app, db) {
     app.get('/', (req, res) => {
         res.send("Hello World!")
     })
     // Register: POST {name, login, password}
-    app.post('/api/register', (req, res) => {
+    app.post('/api/register', async (req, res) => {
         const user = new User(req.body.name, req.body.login, req.body.password, '', 0)
         const users = db.db(dbInfo.db).collection('users')
-        users.findOne({login: user.login}, (err, result) => {
-            if (err || result !== null) {
-                res.send('Error!')
+        try {
+            const response = await users.findOne({login: user.login})
+            if (response !== null) {
+                res.json(new Error('Error! User already exists!'))
             } else {
-                users.insertOne(user, function (err, result) {
-                    if (err) {
-                        console.log(err);
-                        res.send('Error!')
-                    } else {
-                        res.send(result)
-                    }
-                });
+                const result = await users.insertOne(user)
+                res.json(result)
             }
-        })
+        } catch (e) {
+        }
     })
-    // Login: POST {login, password}
+    // Login: POST {login, password} => {isLoggedIn, id, authToken, name, login} | Error
     app.post('/api/login', async (req, res) => {
         const user = new User(null, req.body.login, req.body.password, generateToken(), Date.now().toString())
         const users = db.db(dbInfo.db).collection('users')
-        try {
-            const findResponse = users.findOne({login: user.login, password: user.password})
+        executor(res, async () => {
+            const findResponse = await users.findOne({login: user.login, password: user.password})
             if (findResponse === null) {
-                res.json({'isLoggedIn': false, 'authToken': ''})
+                res.json({isLoggedIn: false, authToken: '', id: '', name: '', login: ''})
             } else {
                 users.updateOne({login: user.login}, {$set: {authToken: user.authToken, lastLogin: user.lastLogin}})
-                res.json({'isLoggedIn': true, 'authToken': user.authToken})
+                res.json({
+                    isLoggedIn: true,
+                    authToken: user.authToken,
+                    id: findResponse._id.toHexString(),
+                    name: findResponse.name,
+                    login: findResponse.login
+                })
             }
-        } catch (err) {
-            res.json({'isLoggedIn': false, 'authToken': ''})
-            console.log(err)
-        }
+        })
     })
-    // Refresh: POST {id, authToken}
+    // Refresh: POST {id}
     app.post('/api/refresh', async (req, res) => {
         const id = req.body.id
-        const authToken = req.body.authToken
         const users = db.db(dbInfo.db).collection('users')
         try {
             const response = await users.findOne({_id: new ObjectId(id)})
             if (response === null) {
-                res.json({'error': true, 'message': 'User Not Found!'})
+                res.json({error: true, message: 'User Not Found!'})
             } else {
-                if (response.authToken === authToken) {
-                    res.json({'needsRefresh': false})
-                } else {
-                    if (dayPassed(response.lastLogin)) {
-                        res.json({'needsRefresh': true})
-                    } else {
-                        res.json({'needsRefresh': false, authToken: response.authToken})
-                    }
-                }
+                res.json({authToken: response.authToken})
             }
         } catch (e) {
             console.log(e)
-            res.json({'match': false})
+            res.json(new Error(e.message))
         }
     })
-    // Create new chat: POST {name, adminId, restriction}
+    // Create new chat: POST {chatName, adminId, restriction, authToken} => {success: boolean} | Error
     app.post('/api/createChat', async (req, res) => {
-        const name = req.body.name
+        const chatName = req.body.chatName
         const adminId = req.body.adminId
         const restriction = req.body.restriction
-        if (name && adminId && restriction) {
+        const authToken = req.body.authToken
+
+        if (chatName && adminId && restriction) {
             const database = db.db(dbInfo.db)
 
             let chatCode = generateId()
@@ -93,18 +110,23 @@ export default function (app, db) {
             const chats = database.collection('chats')
             const user = await database.collection('users').findOne({'_id': new ObjectId(adminId)})
             if (user !== null) {
-                const chat = new Chat(chatCode, name, adminId, +restriction)
-                try {
-                    await chats.insertOne(chat)
-                } catch (e) {
-                    console.log(e.message)
+                if (user.authToken === authToken) {
+                    res.json(new Error('User is not authenticated!'))
+                } else {
+                    const chat = new Chat(chatCode, chatName, adminId, +restriction)
+                    try {
+                        await chats.insertOne(chat)
+                        res.json({success: true})
+                    } catch (e) {
+                        console.log(e.message)
+                        res.json(new Error(e.message))
+                    }
                 }
-                res.json('success')
             } else {
-                res.json('error')
+                res.json(new Error('There is no such user!'))
             }
         } else {
-            res.json("error")
+            res.json(new Error('Too little data in the query!'))
         }
     })
     // Get chat by its code: GET {code}

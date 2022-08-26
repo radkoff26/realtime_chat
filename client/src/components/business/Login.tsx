@@ -3,7 +3,6 @@ import DefaultButton from "../design/DefaultButton";
 import {useAppDispatch} from "../../hooks/UseAppDispatch";
 import {login} from '../../store/actions/authActions'
 import {useAppSelector} from "../../hooks/UseAppSelector";
-import {useNavigate} from "react-router-dom";
 import {authSlice} from "../../store/slices/authSlice";
 
 const Login = () => {
@@ -11,17 +10,10 @@ const Login = () => {
     const [userLogin, setUserLogin] = useState('')
     const [password, setPassword] = useState('')
     const selector = useAppSelector(state => state.authReducer)
-    const navigate = useNavigate()
 
     useEffect(() => {
         dispatch(authSlice.actions.resetError())
     }, [])
-
-    useEffect(() => {
-        if (selector.isLoggedIn) {
-            navigate('/')
-        }
-    }, [selector, navigate])
 
     const changeEventHandler = (setState: (s: string) => void) => (e: ChangeEvent<HTMLInputElement>) => {
         setState(e.target.value)
