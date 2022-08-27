@@ -44,16 +44,19 @@ export default function (app, db) {
     app.post('/api/register', async (req, res) => {
         const user = new User(req.body.name, req.body.login, req.body.password, '', 0)
         const users = db.db(dbInfo.db).collection('users')
-        try {
+        executor(res, async () => {
             const response = await users.findOne({login: user.login})
             if (response !== null) {
-                res.json(new Error('Error! User already exists!'))
+                res.status(400).json('User with such login already exists!')
             } else {
                 const result = await users.insertOne(user)
-                res.json(result)
+                if (result.acknowledged) {
+                    res.json({hasSucceeded: true})
+                } else {
+                    res.json({hasSucceeded: false})
+                }
             }
-        } catch (e) {
-        }
+        })
     })
     // Login: POST {login, password} => {isLoggedIn, id, authToken, name, login} | Error
     app.post('/api/login', async (req, res) => {

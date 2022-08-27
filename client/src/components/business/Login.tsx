@@ -29,10 +29,16 @@ const Login = () => {
 
     return (
         <>
-            <input className='login' type="text" defaultValue={userLogin} onChange={changeEventHandler(setUserLogin)} placeholder='Login'/>
-            <input className='password' type="password" defaultValue={password} onChange={changeEventHandler(setPassword)} placeholder='Password'/>
-            {selector.error && <p className='error'>{selector.error}</p>}
-            <DefaultButton text='Login' clickCallback={() => clickHandler()}/>
+            <div className="input_container no-hint">
+                <input className='login' type="text" defaultValue={userLogin} onChange={changeEventHandler(setUserLogin)} placeholder='Login'/>
+            </div>
+            <div className="input_container no-hint">
+                <input className='password' type="password" defaultValue={password} onChange={changeEventHandler(setPassword)} placeholder='Password'/>
+            </div>
+            {selector.error && <p className='error'>{selector.message}</p>}
+            <div className="btn_container">
+                <DefaultButton text='Login' clickCallback={() => clickHandler()}/>
+            </div>
         </>
     );
 };

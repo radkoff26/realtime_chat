@@ -17,7 +17,7 @@
 .hint {
   display: inline;
   position: relative;
-  cursor: default;
+  cursor: help;
   overflow: hidden;
 
   &_sign {
@@ -44,5 +44,6 @@
     margin-left: 8px;
     opacity: 0;
     animation: fadeIn 1s ease forwards;
+    word-break: break-word;
   }
 }

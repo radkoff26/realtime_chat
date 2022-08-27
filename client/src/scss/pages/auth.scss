@@ -38,45 +38,130 @@
     }
 
     &__form {
-      display: flex;
-      flex-flow: column nowrap;
-      align-items: center;
+      padding: 24px 0;
+      margin: 0 20%;
 
-      input {
-        border: none;
-        outline: none;
-        width: 80%;
-        background-color: rgba(0, 0, 0, 0.2);
-        color: #FFFFFF;
-        padding: 8px 12px;
-        font-size: 20px;
+      .input_container {
+        position: relative;
 
-        &::placeholder {
-          color: #cccccc;
+        .hint {
+          margin-left: 5%;
+
+          &_sign {
+            width: 10%;
+          }
+        }
+
+        input {
+          width: 85%;
+          border: none;
+          outline: none;
+          background-color: rgba(0, 0, 0, 0.2);
+          color: #FFFFFF;
+          padding: 8px 12px;
+          font-size: 20px;
+
+          &::placeholder {
+            color: #cccccc;
+          }
+        }
+
+        &.password {
+          .hint {
+            &_sign {
+              margin-top: 12px;
+            }
+          }
+        }
+
+        .password_container {
+          width: 85%;
+          float: left;
+          position: relative;
+
+          input {
+            width: 100%;
+          }
+
+          .toggler {
+            height: 24px;
+            width: 24px;
+            background-image: url("../../assets/visible.png");
+            background-repeat: no-repeat;
+            background-size: contain;
+            position: absolute;
+            top: calc(50% - 12px);
+            right: 8px;
+            cursor: pointer;
+            
+            &.visible {
+              background-image: url("../../assets/invisible.png");
+            }
+          }
+        }
+
+        &.no-hint {
+          div {
+            width: 100%;
+          }
+
+          input {
+            width: 100%;
+          }
         }
       }
 
       .error {
-        width: 80%;
-        text-align: center;
-        color: rgba(255, 0, 0, 0.7);
+        width: 100%;
         font-weight: 600;
+        color: rgba(255, 0, 0, 0.7);
       }
 
-      input, button {
-        margin: 8px;
+      input {
+        margin: 8px 0;
       }
 
-      button {
-        width: fit-content;
-        padding: 8px 12px;
-        font-size: 22px;
-        transition: .3s;
+      .btn_container {
+        display: flex;
+        justify-content: center;
+        width: 100%;
 
-        &:hover {
-          background-color: #43a050;
+        button {
+          width: fit-content;
+          padding: 8px 12px;
+          font-size: 22px;
+          transition: .3s;
+          margin: 8px 0;
+
+          &:hover {
+            background-color: #43a050;
+          }
         }
       }
     }
   }
 }
+
+//@media screen and (max-width: 1800px) {
+//  .hint {
+//    margin-left: 4% !important;
+//  }
+//}
+//
+//@media screen and (max-width: 1624px) {
+//  .hint {
+//    margin-left: 3% !important;
+//  }
+//}
+//
+//@media screen and (max-width: 1490px) {
+//  .hint {
+//    margin-left: 2% !important;
+//  }
+//}
+//
+//@media screen and (max-width: 1374px) {
+//  .hint {
+//    margin-left: 2% !important;
+//  }
+//}

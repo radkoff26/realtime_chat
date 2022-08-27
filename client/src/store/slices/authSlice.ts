@@ -79,7 +79,6 @@ export const authSlice = createSlice({
             setStorageData(state)
         },
         logout(state) {
-            console.log(123)
             setDefaults(state)
             setStorageData(state)
         }

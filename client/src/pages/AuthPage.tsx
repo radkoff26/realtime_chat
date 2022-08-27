@@ -32,7 +32,7 @@ const AuthPage = () => {
                     <div className={"form_container__controls__register" + (!isRegister ? '' : ' active')} onClick={() => setRegister(true)}>Register</div>
                 </div>
                 <form className='form_container__form' method='POST'>
-                    {isRegister ? <Register/> : <Login/>}
+                    {isRegister ? <Register toggleBlock={() => setRegister(false)}/> : <Login/>}
                 </form>
             </div>
         </div>
