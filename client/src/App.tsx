@@ -1,25 +1,38 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect} from 'react';
 import './App.css';
 import './scss/default.scss';
-import DefaultButton from "./components/design/DefaultButton";
-import WarningButton from "./components/design/WarningButton";
-import CheckBox from "./components/design/CheckBox";
-import Hint from "./components/design/Hint";
+import {store} from "./store";
+import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
+import MainPage from "./pages/MainPage";
+import AuthPage from "./pages/AuthPage";
+import {Provider} from "react-redux";
+import isUserAuthorized from "./modules/IsUserAuthorized";
+import CreateChatPage from "./pages/CreateChatPage";
+import {TYPES} from "./store/actions/userActions";
 
-function App() {
-    const [state, setState] = useState(false)
+const appStore = store()
+
+const App = () => {
+    const onPopState = () => {
+        appStore.dispatch({type: TYPES.REFRESH_COOKIES})
+    }
 
     useEffect(() => {
-        console.log(state)
-    }, [state])
+        window.addEventListener('popstate', onPopState)
+
+        return () => window.removeEventListener('popstate', onPopState)
+    }, [document.cookie])
 
     return (
-        <>
-            <DefaultButton text={'Button'} clickCallback={() => ({})} />
-            <WarningButton text={'Button'} clickCallback={() => ({})} />
-            <CheckBox label={'Checkbox: '} callback={() => setState(state => !state)} />
-            <Hint text={'This is just a hint to help you!'} />
-        </>
+        <Provider store={appStore}>
+            <Router>
+                <Routes>
+                    <Route element={<MainPage />} path={'/'}/>
+                    <Route element={<AuthPage />} path={'/auth'}/>
+                    <Route element={<CreateChatPage />} path={'/createChat'}/>
+                </Routes>
+            </Router>
+        </Provider>
     );
 }
 

@@ -6,6 +6,8 @@ import Hint from "../design/Hint";
 import axios from "../../axios";
 import {AxiosError} from "axios";
 
+import '../../scss/components/form.scss'
+
 interface RegisterProps {
     toggleBlock: () => void
 }
@@ -80,7 +82,7 @@ const reducer: Reducer<InputData, PayloadAction<string>> = (state: InputData, ac
         case TYPES.LOGIN:
             return {...state, login: {value: action.payload, error: ''}}
         case TYPES.LOGIN_ERROR:
-            return {...state, login: {...state.login, error: 'Login doesn\'t satisfy requirements!'}}
+            return {...state, login: {...state.login, error: 'LoginForm doesn\'t satisfy requirements!'}}
         case TYPES.PASSWORD:
             return {...state, password: {value: action.payload, error: ''}}
         case TYPES.PASSWORD_ERROR:
@@ -94,7 +96,7 @@ const reducer: Reducer<InputData, PayloadAction<string>> = (state: InputData, ac
     }
 }
 
-const Register = ({toggleBlock}: RegisterProps) => {
+const RegisterForm = ({toggleBlock}: RegisterProps) => {
     const [state, dispatch] = useReducer(reducer, initialState, () => initialState)
     const [passwordInputState, setPasswordInputState] = useState(false)
     const [repeatPasswordInputState, setRepeatPasswordInputState] = useState(false)
@@ -108,7 +110,7 @@ const Register = ({toggleBlock}: RegisterProps) => {
                 password: state.password.value
             })
             const success = response.data as RegistrationResponse
-            if (success) {
+            if (success.hasSucceeded) {
                 toggleBlock()
             } else {
                 setError('Error!')
@@ -177,7 +179,7 @@ const Register = ({toggleBlock}: RegisterProps) => {
     }
 
     return (
-        <>
+        <form className='form_container__form' method='POST'>
             <div className="input_container">
                 <input className='username' type="text" placeholder='Username' onChange={usernameChangeHandler}/>
                 <Hint
@@ -187,7 +189,7 @@ const Register = ({toggleBlock}: RegisterProps) => {
             <div className="input_container">
                 <input className='login' type="text" placeholder='Login' onChange={loginChangeHandler}/>
                 <Hint
-                    text={'Login must be unique. It must contain at least 3 lowercase and uppercase letters, digits and symbols ".", "-", "_".'}/>
+                    text={'LoginForm must be unique. It must contain at least 3 lowercase and uppercase letters, digits and symbols ".", "-", "_".'}/>
             </div>
             <p className='error'>{state.login.error}</p>
             <div className="input_container password">
@@ -211,8 +213,8 @@ const Register = ({toggleBlock}: RegisterProps) => {
             <div className="btn_container">
                 <DefaultButton text='Register' clickCallback={() => submitHandler()}/>
             </div>
-        </>
+        </form>
     );
 };
 
-export default Register;
+export default RegisterForm;

@@ -1,0 +1,23 @@
+@import "../variables";
+
+#root {
+  flex-flow: column nowrap;
+  align-items: center;
+}
+
+.create_chat {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  height: fit-content;
+  width: 40%;
+
+  .title {
+    margin-top: 24px;
+    font-size: 40px;
+  }
+
+  .switch_container {
+    margin-bottom: 8px;
+  }
+}

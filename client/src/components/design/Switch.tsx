@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
-import '../../scss/components/checkbox.scss'
+import '../../scss/components/switch.scss'
 
-const CheckBox = ({label, callback}: {label: string, callback: () => void}) => {
+const Switch = ({label, callback}: {label: string, callback: () => void}) => {
     const [isChosen, setChosen] = useState(false)
 
     const clickHandler = () => {
@@ -10,13 +10,13 @@ const CheckBox = ({label, callback}: {label: string, callback: () => void}) => {
     }
 
     return (
-        <div className='checkbox_container'>
+        <div className='switch_container'>
             <p>{label}</p>
-            <div className={'checkbox' + (isChosen ? ' chosen' : '')} onClick={clickHandler}>
+            <div className={'switch' + (isChosen ? ' chosen' : '')} onClick={clickHandler}>
                 <div/>
             </div>
         </div>
     );
 };
 
-export default CheckBox;
+export default Switch;

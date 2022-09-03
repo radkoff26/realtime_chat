@@ -17,6 +17,7 @@
     "mongodb": "^4.8.1",
     "morgan": "~1.9.1",
     "pug": "2.0.0-beta11",
+    "sha.js": "^2.4.11",
     "socket.io": "^4.5.1"
   },
   "devDependencies": {

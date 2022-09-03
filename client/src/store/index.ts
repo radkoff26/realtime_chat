@@ -1,15 +1,27 @@
 import {combineReducers, configureStore} from '@reduxjs/toolkit';
-import authReducer from './slices/authSlice'
+import userReducer from './slices/userSlice'
+import loginFormReducer from './slices/loginFormSlice'
+import {deleteCookies, refreshCookies, setStorageData} from "./middleware/userMiddleware";
+import {callbackWithDispatch} from "./middleware/defaultMiddleware";
+import thunk from "redux-thunk";
 
 const rootReducer = combineReducers({
-    authReducer
+    userReducer,
+    loginFormReducer
 })
 
-export function store() {
-    return configureStore({
-        reducer: rootReducer
+export const store = () => (
+    configureStore({
+        reducer: rootReducer,
+        middleware: [
+            thunk,
+            callbackWithDispatch,
+            setStorageData,
+            refreshCookies,
+            deleteCookies
+        ]
     })
-}
+)
 
 export type RootState = ReturnType<typeof rootReducer>
 export type AppStore = ReturnType<typeof store>

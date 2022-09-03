@@ -7,21 +7,14 @@ import MainPage from "./pages/MainPage";
 import {store} from './store'
 import {Provider} from "react-redux";
 import AuthPage from "./pages/AuthPage";
+import './scss/default.scss'
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 
 root.render(
-    <Provider store={store()}>
-        <Router>
-            <Routes>
-                <Route element={<App />} path={'/test'}/>
-                <Route element={<MainPage />} path={'/'}/>
-                <Route element={<AuthPage />} path={'/auth'}/>
-            </Routes>
-        </Router>
-    </Provider>
+    <App />
 );
 
 // If you want to start measuring performance in your app, pass a function
