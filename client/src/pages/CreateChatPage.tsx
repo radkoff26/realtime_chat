@@ -110,6 +110,7 @@ const CreateChatPage = () => {
         localDispatch(setRestriction(+e.target.value))
     }
 
+    // TODO: navigate user right to the chat when chat is created
     const handleSubmit = () => {
         if (state.chatName && state.restriction && isUserAuthorized()) {
             createChat({
@@ -118,9 +119,11 @@ const CreateChatPage = () => {
                     p: Cookie.getCookie(constants.COOKIE.PASSWORD) ?? '',
                     language: navigator.language
                 }
-            ).catch(() => {
-                localDispatch(setError('Some error has occured!'))
-            })
+            )
+                .then(() => navigate('/'))
+                .catch(() => {
+                    localDispatch(setError('Some error has occured!'))
+                })
         } else {
             localDispatch(setError('Do not leave fields blank!'))
         }

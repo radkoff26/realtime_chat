@@ -38,7 +38,7 @@ const MainPage = () => {
             <div className="main_page__links">
                 <ButtonLink text={'Join Chat'} to={'#'}/>
                 <ButtonLink text={'Create Chat'} to={'/createChat'}/>
-                <ButtonLink text={'My Chats'} to={'#'}/>
+                <ButtonLink text={'My Chats'} to={'/myChats'}/>
             </div>
         </div>
     );

@@ -28,15 +28,6 @@ interface RegistrationResponse {
     hasSucceeded: boolean
 }
 
-function isFullMatch(a: string[], s: string): boolean {
-    for (let string of a) {
-        if (string === s) {
-            return true
-        }
-    }
-    return false
-}
-
 const initialState: InputData = {
     username: {
         value: '',
@@ -68,8 +59,8 @@ const TYPES = {
 }
 
 const REGEXES = {
-    USERNAME: /[a-zA-Z]+/,
-    LOGIN: /[a-zA-Z0-9.-_]{3,}/,
+    USERNAME: /[a-zA-Z ]+/,
+    LOGIN: /[a-zA-Z0-9.\-_]{3,}/,
     PASSWORD: /([a-zA-Z0-9.\-_]{8,})/
 }
 
@@ -82,7 +73,7 @@ const reducer: Reducer<InputData, PayloadAction<string>> = (state: InputData, ac
         case TYPES.LOGIN:
             return {...state, login: {value: action.payload, error: ''}}
         case TYPES.LOGIN_ERROR:
-            return {...state, login: {...state.login, error: 'LoginForm doesn\'t satisfy requirements!'}}
+            return {...state, login: {...state.login, error: 'Login doesn\'t satisfy requirements!'}}
         case TYPES.PASSWORD:
             return {...state, password: {value: action.payload, error: ''}}
         case TYPES.PASSWORD_ERROR:
@@ -103,6 +94,13 @@ const RegisterForm = ({toggleBlock}: RegisterProps) => {
     const [error, setError] = useState<string | null>(null)
 
     const submitHandler = async () => {
+        if (!(state.login.value && state.username.value && state.password.value && state.repeatPassword.value)) {
+            setError('You need to fill each field!')
+            return
+        }
+        if (state.login.error || state.username.error || state.password.error || state.repeatPassword.error) {
+            return
+        }
         try {
             const response = await axios.post('/register', {
                 name: state.username.value,
@@ -189,7 +187,7 @@ const RegisterForm = ({toggleBlock}: RegisterProps) => {
             <div className="input_container">
                 <input className='login' type="text" placeholder='Login' onChange={loginChangeHandler}/>
                 <Hint
-                    text={'LoginForm must be unique. It must contain at least 3 lowercase and uppercase letters, digits and symbols ".", "-", "_".'}/>
+                    text={'Login must be unique. It must contain at least 3 lowercase and uppercase letters, digits and symbols ".", "-", "_".'}/>
             </div>
             <p className='error'>{state.login.error}</p>
             <div className="input_container password">

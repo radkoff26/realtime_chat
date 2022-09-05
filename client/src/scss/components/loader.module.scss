@@ -1,0 +1,21 @@
+@import "../variables";
+
+@keyframes loading {
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loader {
+  height: 50px;
+  width: 50px;
+
+  img {
+    height: 100%;
+    width: 100%;
+    animation: loading 1s linear infinite;
+  }
+}

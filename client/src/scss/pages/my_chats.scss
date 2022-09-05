@@ -1,0 +1,63 @@
+@import "../variables";
+
+.my_chats {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 32px;
+  width: 70%;
+  align-items: center;
+
+  .title {
+    margin-top: 50px;
+  }
+
+  .chat_list {
+    min-height: 80vh;
+    width: 100%;
+    text-align: center;
+
+    &__item {
+      display: grid;
+      width: 100%;
+      grid-template-areas: "name name name participants" "code code code language";
+      gap: 8px;
+      padding: 12px 64px;
+      background: $gradient-back;
+      border: 1px solid $white;
+      border-radius: 25px;
+      margin-bottom: 24px;
+
+      div {
+        display: flex;
+        height: 100%;
+        align-items: center;
+      }
+
+      &__name {
+        grid-area: name;
+        font-size: 24px;
+        font-weight: 500;
+      }
+
+      &__code {
+        grid-area: code;
+        font-size: 14px;
+      }
+
+      &__participants {
+        grid-area: participants;
+      }
+
+      &__language {
+        grid-area: language;
+        font-size: 18px;
+        font-weight: 600;
+      }
+
+      &__participants, &__language {
+        justify-content: end;
+        align-items: center;
+      }
+    }
+  }
+}

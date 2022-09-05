@@ -8,12 +8,23 @@ import sha from 'sha.js'
 
 const constants = {
     CHAT_POSTFIX_DIRECTIVES: {
-        CHAT_MESSAGES: '_chat',
-        CHAT_PARTICIPANTS: '_participants'
+        CHAT_MESSAGES: '_chat', CHAT_PARTICIPANTS: '_participants'
     }
 }
 
 const serverError = 'Error has occured on the server side!'
+const dataError = 'Too little data in the query!'
+const authError = 'User is not authenticated!'
+
+class ChatForList {
+    constructor(chat, number) {
+        this.chatCode = chat.chatCode
+        this.name = chat.name
+        this.maxNumberOfParticipants = chat.participantsRestriction
+        this.currentNumberOfParticipants = number ?? 0
+        this.language = chat.language
+    }
+}
 
 async function dbIncludesCollection(db, collectionName) {
     const collections = await db.collections()
@@ -73,9 +84,7 @@ export default function (app, db) {
             } else {
                 users.updateOne({login: user.login}, {$set: {lastLogin: user.lastLogin}})
                 res.json({
-                    isLoggedIn: true,
-                    id: findResponse._id.toHexString(),
-                    name: findResponse.name
+                    isLoggedIn: true, id: findResponse._id.toHexString(), name: findResponse.name
                 })
             }
         } catch (e) {
@@ -95,7 +104,7 @@ export default function (app, db) {
             const database = db.db(dbInfo.db)
 
             if (!(await isUserAuthorized(database, adminId, passwordHashed))) {
-                res.status(403).send('User is not authenticated!')
+                res.status(403).send(authError)
                 return
             }
 
@@ -116,10 +125,43 @@ export default function (app, db) {
                 res.status(500).send(e.message)
             }
         } else {
-            res.status(400).send('Too little data in the query!')
+            res.status(400).send(dataError)
         }
     })
+    // Get all chats created by user: GET {id, password}
+    app.get('/api/getOwnersChatsById', async (req, res) => {
+        const id = req.query.id
+        const password = req.query.password
 
+        if (id && password) {
+            const database = db.db(dbInfo.db)
+
+            try {
+                if (await isUserAuthorized(database, id, password)) {
+                    const cursor = database.collection('chats').find({adminId: id})
+                    let chats = await cursor.toArray()
+                    for (let i = 0; i < chats.length;) {
+                        const chat = chats[i]
+                        const collectionName = chat.chatCode + constants.CHAT_POSTFIX_DIRECTIVES.CHAT_PARTICIPANTS
+                        if (await dbIncludesCollection(database, collectionName)) {
+                            chats[i].currentNumberOfParticipants = await database.collection(collectionName).countDocuments()
+                            i++
+                        } else {
+                            chats.splice(i, 1)
+                        }
+                    }
+                    res.status(200).json(chats)
+                } else {
+                    res.status(403).send(authError)
+                }
+            } catch (e) {
+                res.status(500).send(serverError)
+            }
+
+        } else {
+            res.status(400).send(dataError)
+        }
+    })
     // Get chat by its code: GET {code}
     app.get('/api/getChatByCode', async (req, res) => {
         if (req.query.code) {

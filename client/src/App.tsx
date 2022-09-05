@@ -9,6 +9,8 @@ import {Provider} from "react-redux";
 import isUserAuthorized from "./modules/IsUserAuthorized";
 import CreateChatPage from "./pages/CreateChatPage";
 import {TYPES} from "./store/actions/userActions";
+import MyChatsPage from "./pages/MyChatsPage";
+import ChatPage from "./pages/ChatPage";
 
 const appStore = store()
 
@@ -30,6 +32,8 @@ const App = () => {
                     <Route element={<MainPage />} path={'/'}/>
                     <Route element={<AuthPage />} path={'/auth'}/>
                     <Route element={<CreateChatPage />} path={'/createChat'}/>
+                    <Route element={<MyChatsPage />} path={'/myChats'}/>
+                    <Route element={<ChatPage />} path={'/chat/:slug'}/>
                 </Routes>
             </Router>
         </Provider>

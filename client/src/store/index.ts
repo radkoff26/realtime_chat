@@ -1,13 +1,15 @@
 import {combineReducers, configureStore} from '@reduxjs/toolkit';
 import userReducer from './slices/userSlice'
 import loginFormReducer from './slices/loginFormSlice'
+import chatsListReducer from './slices/chatsListSlice'
 import {deleteCookies, refreshCookies, setStorageData} from "./middleware/userMiddleware";
 import {callbackWithDispatch} from "./middleware/defaultMiddleware";
 import thunk from "redux-thunk";
 
 const rootReducer = combineReducers({
     userReducer,
-    loginFormReducer
+    loginFormReducer,
+    chatsListReducer
 })
 
 export const store = () => (

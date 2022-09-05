@@ -3,6 +3,7 @@ import Cookie from "../../models/Cookie";
 import {UserState} from "../slices/userSlice";
 import {Middleware} from "@reduxjs/toolkit";
 import {TYPES} from "../actions/userActions";
+import {chatsListSlice} from "../slices/chatsListSlice";
 
 export const setStorageData: Middleware = ({getState, dispatch}) => (next) => (action) => {
     if (typeof action !== 'function' && action.type === TYPES.SET_STORAGE_DATA) {
@@ -17,6 +18,7 @@ export const setStorageData: Middleware = ({getState, dispatch}) => (next) => (a
             localStorage.setItem(constants.LOCAL_STORAGE.LOGIN, '')
             Cookie.deleteCookie(constants.COOKIE.ID)
             Cookie.deleteCookie(constants.COOKIE.PASSWORD)
+            dispatch(chatsListSlice.actions.reset())
         }
     } else {
         next(action)

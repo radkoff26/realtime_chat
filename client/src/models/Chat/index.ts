@@ -1,11 +1,9 @@
-export interface Chat extends ChatInList {
-    adminId: string
-    isPublic: boolean
-}
-
-export interface ChatInList {
+export interface Chat {
     chatCode: string
     name: string
-    maxNumberOfParticipants: number
+    currentNumberOfParticipants: number
+    participantsRestriction: number
     language: string
+    adminId: string
+    isPublic: boolean
 }
