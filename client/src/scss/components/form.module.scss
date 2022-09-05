@@ -25,16 +25,9 @@
     .input_container {
       position: relative;
 
-      .hint {
-        margin-left: 5%;
-
-        &_sign {
-          width: 10%;
-        }
-      }
-
       input {
         width: 85%;
+        margin-right: 5%;
 
         &::placeholder {
           color: #cccccc;
@@ -53,6 +46,7 @@
         width: 85%;
         float: left;
         position: relative;
+        margin-right: 5%;
 
         input {
           width: 100%;
@@ -75,7 +69,7 @@
         }
       }
 
-      &.no-hint {
+      &.noHint {
         div {
           width: 100%;
         }

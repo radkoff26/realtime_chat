@@ -1,8 +1,9 @@
-import React, {useEffect, useLayoutEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Title from "../components/design/Title";
 import LoginForm from "../components/business/LoginForm";
 import RegisterForm from "../components/business/RegisterForm";
-import '../scss/pages/auth.scss'
+import authStyle from '../scss/pages/auth.module.scss'
+import formStyle from '../scss/components/form.module.scss'
 import {useAppSelector} from "../hooks/UseAppSelector";
 import {useNavigate} from "react-router-dom";
 
@@ -18,14 +19,14 @@ const AuthPage = () => {
     }, [selector, navigate])
 
     return (
-        <div className='auth_page'>
+        <div className={authStyle.auth_page}>
             <Title text={isRegister ? 'Register' : 'Login'}/>
-            <div className='form_container'>
-                <div className="form_container__controls">
-                    <div className={"form_container__controls__login" + (isRegister ? '' : ' active')}
+            <div className={formStyle.form_container}>
+                <div className={authStyle.form_container__controls}>
+                    <div className={isRegister ? '' : authStyle.active}
                          onClick={() => setRegister(false)}>Login
                     </div>
-                    <div className={"form_container__controls__register" + (!isRegister ? '' : ' active')}
+                    <div className={!isRegister ? '' : authStyle.active}
                          onClick={() => setRegister(true)}>Register
                     </div>
                 </div>

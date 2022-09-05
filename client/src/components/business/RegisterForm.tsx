@@ -1,12 +1,11 @@
-import React, {memo, Reducer, useReducer, useRef, useState} from 'react';
+import React, {Reducer, useReducer, useState} from 'react';
 import DefaultButton from "../design/DefaultButton";
-import {useNavigate} from "react-router-dom";
 import {PayloadAction} from "@reduxjs/toolkit";
 import Hint from "../design/Hint";
 import axios from "../../axios";
 import {AxiosError} from "axios";
 
-import '../../scss/components/form.scss'
+import styles from '../../scss/components/form.module.scss'
 
 interface RegisterProps {
     toggleBlock: () => void
@@ -177,38 +176,38 @@ const RegisterForm = ({toggleBlock}: RegisterProps) => {
     }
 
     return (
-        <form className='form_container__form' method='POST'>
-            <div className="input_container">
-                <input className='username' type="text" placeholder='Username' onChange={usernameChangeHandler}/>
+        <form className={styles.form_container__form} method='POST'>
+            <div className={styles.input_container}>
+                <input type="text" placeholder='Username' onChange={usernameChangeHandler}/>
                 <Hint
                     text={'Your name that will be shown in chat. It can contain lowercase and upper case letters and whitespaces.'}/>
             </div>
-            <p className='error'>{state.username.error}</p>
-            <div className="input_container">
-                <input className='login' type="text" placeholder='Login' onChange={loginChangeHandler}/>
+            <p className={styles.error}>{state.username.error}</p>
+            <div className={styles.input_container}>
+                <input type="text" placeholder='Login' onChange={loginChangeHandler}/>
                 <Hint
                     text={'Login must be unique. It must contain at least 3 lowercase and uppercase letters, digits and symbols ".", "-", "_".'}/>
             </div>
-            <p className='error'>{state.login.error}</p>
-            <div className="input_container password">
-                <div className="password_container">
-                    <input className='password' type={passwordInputState ? "text" : "password"} placeholder='Password' onChange={passwordChangeHandler}/>
-                    <div className={"toggler" + (passwordInputState ? " visible" : "")} onClick={() => togglePassword()}/>
+            <p className={styles.error}>{state.login.error}</p>
+            <div className={styles.input_container + ' ' + styles.password}>
+                <div className={styles.password_container}>
+                    <input className={styles.password} type={passwordInputState ? "text" : "password"} placeholder='Password' onChange={passwordChangeHandler}/>
+                    <div className={styles.toggler + (passwordInputState ? " " + styles.visible : "")} onClick={() => togglePassword()}/>
                 </div>
                 <Hint
                     text={'Make your password as safe as possible. It must contain at least 8 lowercase and uppercase letters, digits and symbols ".", "-", "_".'}
                 />
             </div>
-            <p className='error'>{state.password.error}</p>
-            <div className="input_container no-hint password">
-                <div className="password_container">
-                    <input className='password' type={repeatPasswordInputState ? "text" : "password"} placeholder='Repeat Password' onChange={repeatPasswordChangeHandler}/>
-                    <div className={"toggler" + (repeatPasswordInputState ? " visible" : "")} onClick={() => toggleRepeatPassword()}/>
+            <p className={styles.error}>{state.password.error}</p>
+            <div className={styles.input_container + " " + styles.noHint + " " + styles.password}>
+                <div className={styles.password_container}>
+                    <input className={styles.password} type={repeatPasswordInputState ? "text" : "password"} placeholder='Repeat Password' onChange={repeatPasswordChangeHandler}/>
+                    <div className={styles.toggler + (repeatPasswordInputState ? " " + styles.visible : "")} onClick={() => toggleRepeatPassword()}/>
                 </div>
             </div>
-            <p className='error'>{state.repeatPassword.error}</p>
-            {error && <><br/><p className='error'>{error}</p></>}
-            <div className="btn_container">
+            <p className={styles.error}>{state.repeatPassword.error}</p>
+            {error && <><br/><p className={styles.error}>{error}</p></>}
+            <div className={styles.btn_container}>
                 <DefaultButton text='Register' clickCallback={() => submitHandler()}/>
             </div>
         </form>

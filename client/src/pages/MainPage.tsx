@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import WarningButton from "../components/design/WarningButton";
 import Title from "../components/design/Title";
 import ButtonLink from "../components/design/ButtonLink";
-import '../scss/pages/main.scss'
+import styles from '../scss/pages/main.module.scss'
 import {useAppDispatch} from "../hooks/UseAppDispatch";
 import {authSlice} from "../store/slices/userSlice";
 import {useAppSelector} from "../hooks/UseAppSelector";
@@ -22,7 +22,7 @@ const MainPage = () => {
                 dispatch(authSlice.actions.logout())
             }
         }
-    }, [selector, dispatch])
+    }, [selector, dispatch, navigate])
 
     const logoutClickHandler = () => {
         dispatch(authSlice.actions.logout())
@@ -30,12 +30,12 @@ const MainPage = () => {
     }
 
     return (
-        <div className='main_page'>
-            <div className="main_page__logout">
+        <div className={styles.main_page}>
+            <div className={styles.main_page__logout}>
                 <WarningButton text={'Logout'} clickCallback={() => logoutClickHandler()}/>
             </div>
             <Title text={`Hi, ${selector.name}! Isn’t it time to chat?`}/>
-            <div className="main_page__links">
+            <div className={styles.main_page__links}>
                 <ButtonLink text={'Join Chat'} to={'#'}/>
                 <ButtonLink text={'Create Chat'} to={'/createChat'}/>
                 <ButtonLink text={'My Chats'} to={'/myChats'}/>

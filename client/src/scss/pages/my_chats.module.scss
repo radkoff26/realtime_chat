@@ -1,0 +1,15 @@
+@import "../variables";
+
+.my_chats {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 32px;
+  width: 70%;
+  align-items: center;
+
+  .title {
+    margin-top: 50px;
+  }
+
+
+}

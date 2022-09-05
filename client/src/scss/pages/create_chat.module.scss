@@ -5,9 +5,10 @@
   flex-flow: column nowrap;
   align-items: center;
   height: fit-content;
-  width: 40%;
+  padding-top: 24px;
+  width: 40% !important;
 
-  .title {
+  h1 {
     margin-top: 24px;
     font-size: 40px;
   }

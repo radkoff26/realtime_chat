@@ -4,8 +4,7 @@ import {useAppDispatch} from "../../hooks/UseAppDispatch";
 import {login} from '../../store/actions/userActions'
 import {useAppSelector} from "../../hooks/UseAppSelector";
 import {loginFormSlice} from "../../store/slices/loginFormSlice";
-import '../../scss/components/form.scss'
-import {ActionCreatorWithPayload} from "@reduxjs/toolkit";
+import styles from '../../scss/components/form.module.scss'
 
 // TODO: create another separate slice for login error
 const LoginForm = () => {
@@ -16,7 +15,7 @@ const LoginForm = () => {
 
     useEffect(() => {
         dispatch(loginFormSlice.actions.resetError())
-    }, [])
+    }, [dispatch])
 
     const changeEventHandler = (setState: (s:string) => void) => (e: ChangeEvent<HTMLInputElement>) => {
         setState(e.target.value)
@@ -31,15 +30,15 @@ const LoginForm = () => {
     }
 
     return (
-        <form className='form_container__form' method='POST'>
-            <div className="input_container no-hint">
-                <input className='login' type="text" defaultValue={userLogin} onChange={changeEventHandler(setUserLogin)} placeholder='Login'/>
+        <form className={styles.form_container__form} method='POST'>
+            <div className={styles.input_container + " " + styles.noHint}>
+                <input type="text" defaultValue={userLogin} onChange={changeEventHandler(setUserLogin)} placeholder='Login'/>
             </div>
-            <div className="input_container no-hint">
-                <input className='password' type="password" defaultValue={password} onChange={changeEventHandler(setPassword)} placeholder='Password'/>
+            <div className={styles.input_container + " " + styles.noHint}>
+                <input className={styles.password} type="password" defaultValue={password} onChange={changeEventHandler(setPassword)} placeholder='Password'/>
             </div>
-            {selector.isError && <p className='error'>{selector.message}</p>}
-            <div className="btn_container">
+            {selector.isError && <p className={styles.error}>{selector.message}</p>}
+            <div className={styles.btn_container}>
                 <DefaultButton text='Login' clickCallback={() => clickHandler()}/>
             </div>
         </form>

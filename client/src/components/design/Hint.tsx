@@ -1,5 +1,5 @@
 import React, {useCallback, useLayoutEffect, useState} from 'react';
-import '../../scss/components/hint.scss'
+import styles from '../../scss/components/hint.module.scss'
 
 const Hint = ({text}: {text: string}) => {
     const [isShown, setShown] = useState(false)
@@ -34,9 +34,9 @@ const Hint = ({text}: {text: string}) => {
     }
 
     return (
-        <div className='hint' onMouseOver={mouseOverHandler} onMouseOut={mouseOutHandler}>
-            <div className="hint_sign" ref={ref}>?</div>
-            {isShown && <div className="hint_text">{text}</div>}
+        <div className={styles.hint} onMouseOver={mouseOverHandler} onMouseOut={mouseOutHandler}>
+            <div className={styles.hint_sign} ref={ref}>?</div>
+            {isShown && <div className={styles.hint_text}>{text}</div>}
         </div>
     );
 };

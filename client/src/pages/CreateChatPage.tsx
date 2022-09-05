@@ -6,9 +6,8 @@ import DefaultButton from "../components/design/DefaultButton";
 import isUserAuthorized from "../modules/IsUserAuthorized";
 import {useNavigate} from "react-router-dom";
 import {useAppDispatch} from "../hooks/UseAppDispatch";
-
-import '../scss/pages/create_chat.scss'
-import '../scss/components/form.scss'
+import createChatStyles from '../scss/pages/create_chat.module.scss'
+import formStyles from '../scss/components/form.module.scss'
 import Title from "../components/design/Title";
 import {authSlice} from "../store/slices/userSlice";
 import createChat, {CreateChatRequestData} from "../modules/CreateChatRequest";
@@ -92,7 +91,7 @@ const CreateChatPage = () => {
                 dispatch(authSlice.actions.logout())
             }
         }
-    }, [])
+    }, [dispatch, navigate, userSelector])
 
     const handleName = (e: React.ChangeEvent<HTMLInputElement>) => {
         localDispatch(setChatName(e.target.value))
@@ -130,19 +129,19 @@ const CreateChatPage = () => {
     }
 
     return (
-        <div className='create_chat form_container'>
+        <div className={createChatStyles.create_chat + " " + formStyles.form_container}>
             <Title text='Create Chat'/>
-            <form className='form_container__form'>
-                <input type="text" className="form_container__form__name" placeholder='Chat Name'
+            <form className={formStyles.form_container__form}>
+                <input type="text" placeholder='Chat Name'
                        onChange={handleName}/>
-                <div className="input_container">
-                    <input type="number" className="form_container__form__restriction" placeholder='Restriction'
+                <div className={formStyles.input_container}>
+                    <input type="number" placeholder='Restriction'
                            onChange={handleRestriction} defaultValue={2}/>
                     <Hint text='Restriction of participants must be in the range from 2 to 32!'/>
                 </div>
                 <Switch label='Public Chat' callback={() => setPublic(!state.isPublic)}/>
-                {state.error && <p className="error">{state.error}</p>}
-                <div className="btn_container">
+                {state.error && <p className={formStyles.error}>{state.error}</p>}
+                <div className={formStyles.btn_container}>
                     <DefaultButton text='Create' clickCallback={() => handleSubmit()}/>
                 </div>
             </form>

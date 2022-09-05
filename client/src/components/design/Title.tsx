@@ -1,9 +1,9 @@
 import React from 'react';
-import '../../scss/components/title.scss'
+import styles from  '../../scss/components/title.module.scss'
 
 const Title = ({text}: {text: string}) => {
     return (
-        <h1 className='title'>{text}</h1>
+        <h1 className={styles.title}>{text}</h1>
     );
 };
 

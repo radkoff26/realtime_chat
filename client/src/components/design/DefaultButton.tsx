@@ -1,5 +1,5 @@
 import React from 'react';
-import '../../scss/components/button.scss'
+import styles from '../../scss/components/button.module.scss'
 
 const DefaultButton = ({text, clickCallback}: {text: string, clickCallback: () => void}) => {
     const clickHandler = (e: React.MouseEvent) => {
@@ -8,7 +8,7 @@ const DefaultButton = ({text, clickCallback}: {text: string, clickCallback: () =
     }
 
     return (
-        <button className='button button-default' onClick={clickHandler}>{text}</button>
+        <button className={styles.button + " " + styles.buttonDefault} onClick={clickHandler}>{text}</button>
     );
 };
 

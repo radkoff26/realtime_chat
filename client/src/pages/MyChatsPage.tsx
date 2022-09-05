@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
-
-import '../scss/pages/my_chats.scss'
+import myChatsStyles from '../scss/pages/my_chats.module.scss'
+import formStyles from '../scss/components/form.module.scss'
 import Title from "../components/design/Title";
 import ChatsList from "../components/business/ChatsList";
 import {getOwnersChats} from "../store/actions/chatsListActions";
@@ -29,13 +29,13 @@ const MyChatsPage = () => {
         } else {
             navigate('/auth')
         }
-    }, [])
+    }, [dispatch, navigate])
 
     return (
-        <div className='my_chats'>
+        <div className={myChatsStyles.my_chats}>
             <Title text='Your Chats'/>
             {selector.isLoading && <Loader/>}
-            {selector.error ? <h2 className='error'>{selector.error}</h2> :
+            {selector.error ? <h2 className={formStyles.error}>{selector.error}</h2> :
                 <ChatsList
                     list={selector.list}
                     isLoaded={selector.isLoading}
