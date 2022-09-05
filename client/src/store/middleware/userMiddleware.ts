@@ -1,5 +1,5 @@
 import constants from "../../constants";
-import Cookie from "../../models/Cookie";
+import Cookie from "../../modules/Cookie";
 import {UserState} from "../slices/userSlice";
 import {Middleware} from "@reduxjs/toolkit";
 import {TYPES} from "../actions/userActions";

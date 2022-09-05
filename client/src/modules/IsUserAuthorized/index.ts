@@ -1,4 +1,4 @@
-import Cookie from "../../models/Cookie";
+import Cookie from "../Cookie";
 import constants from "../../constants";
 
 export default function isUserAuthorized() {

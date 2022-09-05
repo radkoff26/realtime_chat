@@ -1,8 +1,7 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import AuthError from "../../models/AuthError";
 import constants from '../../constants'
-import Cookie from "../../models/Cookie";
-import encode from "../../sha";
+import Cookie from "../../modules/Cookie";
+import encode from "../../modules/sha";
 import User from "../../models/User";
 
 export type LoginResponse = {isLoggedIn: boolean} & User

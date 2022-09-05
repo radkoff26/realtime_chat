@@ -1,14 +1,12 @@
-import constants from "../../constants";
-
 interface CookieOptions {
     path: string
-    ['max-age']: number
+    maxAge: number
 }
 
 export default class Cookie {
     static getCookie(key: string): string | undefined {
         let matches = document.cookie.match(new RegExp(
-            "(?:^|; )" + key.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+            "(?:^|; )" + key.replace(/([.$?*|{}()\[\]\\\/+^])/g, '\\$1') + "=([^;]*)"
         ));
         return matches ? decodeURIComponent(matches[1]) : undefined;
     }
@@ -16,12 +14,12 @@ export default class Cookie {
     static setCookie(key: string, value: string, maxAge: number) {
         let options: CookieOptions = {
             path: '/',
-            ['max-age']: maxAge
+            maxAge: maxAge
         };
 
         let updatedCookie = encodeURIComponent(key) + "=" + encodeURIComponent(value);
 
-        updatedCookie += `; path=${options.path}; max-age=${options["max-age"]}`
+        updatedCookie += `; path=${options.path}; max-age=${options.maxAge}`
 
         document.cookie = updatedCookie;
     }

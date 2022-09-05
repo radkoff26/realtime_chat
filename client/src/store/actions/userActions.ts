@@ -1,5 +1,5 @@
 import {AppDispatch} from "../index";
-import axios from "../../axios";
+import axios from "../../modules/axios";
 import {authSlice, LoginResponse} from "../slices/userSlice";
 import {loginFormSlice} from "../slices/loginFormSlice";
 import User from "../../models/User";

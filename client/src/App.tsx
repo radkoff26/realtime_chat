@@ -6,7 +6,6 @@ import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
 import MainPage from "./pages/MainPage";
 import AuthPage from "./pages/AuthPage";
 import {Provider} from "react-redux";
-import isUserAuthorized from "./modules/IsUserAuthorized";
 import CreateChatPage from "./pages/CreateChatPage";
 import {TYPES} from "./store/actions/userActions";
 import MyChatsPage from "./pages/MyChatsPage";

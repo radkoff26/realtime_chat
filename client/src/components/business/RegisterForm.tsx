@@ -2,7 +2,7 @@ import React, {Reducer, useReducer, useState} from 'react';
 import DefaultButton from "../design/DefaultButton";
 import {PayloadAction} from "@reduxjs/toolkit";
 import Hint from "../design/Hint";
-import axios from "../../axios";
+import axios from "../../modules/axios";
 import {AxiosError} from "axios";
 
 import styles from '../../scss/components/form.module.scss'

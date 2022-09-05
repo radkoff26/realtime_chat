@@ -1,5 +1,5 @@
 import {AppDispatch} from "../index";
-import axios from "../../axios";
+import axios from "../../modules/axios";
 import {chatsListSlice} from "../slices/chatsListSlice";
 import {AxiosError} from "axios";
 import {Chat} from "../../models/Chat";

@@ -4,7 +4,7 @@ import formStyles from '../scss/components/form.module.scss'
 import Title from "../components/design/Title";
 import ChatsList from "../components/business/ChatsList";
 import {getOwnersChats} from "../store/actions/chatsListActions";
-import Cookie from "../models/Cookie";
+import Cookie from "../modules/Cookie";
 import constants from "../constants";
 import {useAppSelector} from "../hooks/UseAppSelector";
 import {useAppDispatch} from "../hooks/UseAppDispatch";

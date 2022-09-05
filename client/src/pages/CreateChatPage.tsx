@@ -11,7 +11,7 @@ import formStyles from '../scss/components/form.module.scss'
 import Title from "../components/design/Title";
 import {authSlice} from "../store/slices/userSlice";
 import createChat, {CreateChatRequestData} from "../modules/CreateChatRequest";
-import Cookie from "../models/Cookie";
+import Cookie from "../modules/Cookie";
 import constants from "../constants";
 
 interface ChatInputState {
