@@ -1,0 +1,110 @@
+@import "../variables";
+
+.chat {
+  display: flex;
+  flex-flow: row nowrap;
+  width: 100%;
+
+  &_participants {
+    display: flex;
+    flex-flow: column nowrap;
+    height: 100vh;
+    width: 48px;
+    transition: .7s;
+    padding: 12px 0;
+
+    &.expanded {
+      width: 20%;
+
+      .container {
+        visibility: visible !important;
+      }
+    }
+
+    &__turn.turn {
+      display: flex;
+      margin: 0 8px;
+      align-items: center;
+      height: 5%;
+      width: fit-content;
+      cursor: pointer;
+
+      img {
+        height: 100%;
+        width: 100%;
+        object-fit: contain;
+      }
+    }
+
+    &__container.container {
+      height: 90%;
+      visibility: hidden;
+      padding: 12px;
+
+      .title {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        border-top: 1px solid #ccc;
+        padding: 8px;
+        text-align: left;
+        font-size: 14px;
+        color: #ccc;
+      }
+    }
+
+    &__overall_participants {
+      height: 5%;
+      display: flex;
+      flex-flow: column nowrap;
+      justify-content: center;
+      align-items: center;
+
+      div {
+        height: 12px;
+        width: 12px;
+        border-radius: 50%;
+        background-color: #0F0;
+        box-shadow: 0 0 5px #0F0;
+      }
+
+      p {
+        margin-top: 4px;
+        word-break: break-all;
+        font-size: 14px;
+      }
+    }
+  }
+
+  &_content {
+    height: 100vh;
+    width: 100%;
+    background-color: $bgc_main;
+    position: relative;
+    padding-bottom: 68px;
+
+    &__messages {
+      display: flex;
+      height: 100%;
+      flex-flow: column-reverse nowrap;
+      padding: 16px 16px 0;
+
+      &__container {
+        flex-flow: column-reverse nowrap;
+
+        // Chat Items
+      }
+    }
+
+    &__input {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      height: 54px;
+      width: 100%;
+      margin: auto;
+      background-color: #cccccc;
+    }
+  }
+}
+

@@ -139,7 +139,7 @@ const CreateChatPage = () => {
                            onChange={handleRestriction} defaultValue={2}/>
                     <Hint text='Restriction of participants must be in the range from 2 to 32!'/>
                 </div>
-                <Switch label='Public Chat' callback={() => setPublic(!state.isPublic)}/>
+                <Switch label='Public Chat' callback={() => localDispatch(setPublic(!state.isPublic))}/>
                 {state.error && <p className={formStyles.error}>{state.error}</p>}
                 <div className={formStyles.btn_container}>
                     <DefaultButton text='Create' clickCallback={() => handleSubmit()}/>

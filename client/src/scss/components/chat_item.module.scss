@@ -1,0 +1,56 @@
+@import "../variables";
+
+.itemOuter {
+  display: flex;
+  width: 100%;
+  justify-content: left;
+
+  &.userMessage {
+    justify-content: right;
+  }
+
+  .item {
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 8px;
+    width: fit-content;
+    min-width: 40%;
+    max-width: 70%;
+    margin: 16px 0;
+    padding: 16px;
+    border: 1px solid #cccccc;
+    border-radius: 24px;
+
+    div {
+      color: $white;
+    }
+
+    &__top {
+      display: flex;
+      flex-flow: row nowrap;
+
+      &__avatar {
+        height: 50px;
+        width: 50px;
+        border-radius: 50%;
+      }
+
+      &__name {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-left: 16px;
+        word-break: break-all;
+      }
+    }
+
+    &__content {
+      word-break: break-all;
+    }
+
+    &__time {
+      text-align: right;
+    }
+  }
+}
+

@@ -11,8 +11,8 @@ export const setStorageData: Middleware = ({getState, dispatch}) => (next) => (a
         if (state.isLoggedIn) {
             localStorage.setItem(constants.LOCAL_STORAGE.NAME, state.name)
             localStorage.setItem(constants.LOCAL_STORAGE.LOGIN, state.login)
-            Cookie.setCookie(constants.COOKIE.ID, state.id, 300)
-            Cookie.setCookie(constants.COOKIE.PASSWORD, state.password, 300)
+            Cookie.setCookie(constants.COOKIE.ID, state.id, constants.TIME.DAY)
+            Cookie.setCookie(constants.COOKIE.PASSWORD, state.password, constants.TIME.DAY)
         } else {
             localStorage.setItem(constants.LOCAL_STORAGE.NAME, '')
             localStorage.setItem(constants.LOCAL_STORAGE.LOGIN, '')
@@ -28,8 +28,8 @@ export const setStorageData: Middleware = ({getState, dispatch}) => (next) => (a
 export const refreshCookies: Middleware = ({getState, dispatch}) => (next) => (action) => {
     if (typeof action !== 'function' && action.type === TYPES.REFRESH_COOKIES) {
         const state = getState().userReducer as UserState
-        Cookie.setCookie(constants.COOKIE.ID, state.id, 300)
-        Cookie.setCookie(constants.COOKIE.PASSWORD, state.password, 300)
+        Cookie.setCookie(constants.COOKIE.ID, state.id, constants.TIME.DAY)
+        Cookie.setCookie(constants.COOKIE.PASSWORD, state.password, constants.TIME.DAY)
     } else {
         next(action)
     }

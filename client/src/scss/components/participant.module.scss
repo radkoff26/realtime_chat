@@ -1,0 +1,37 @@
+@import "../variables";
+
+.participant {
+  display: flex;
+  flex-flow: row nowrap;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+
+  &.pending {
+    div {
+      border: 1px solid #ccc;
+      padding: 2px;
+      font-size: 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: .5s;
+      color: #ccc;
+
+      &:hover {
+        background-color: #ccc;
+        color: $secondary;
+      }
+    }
+  }
+
+  &.notPending {
+    div {
+      height: 10px;
+      width: 10px;
+      border-radius: 50%;
+      background-color: #0F0;
+      box-shadow: 0 0 5px #0F0;
+    }
+  }
+}

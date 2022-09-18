@@ -14,6 +14,14 @@ import ChatPage from "./pages/ChatPage";
 const appStore = store()
 
 const App = () => {
+    const state = appStore.getState().userReducer
+
+    useEffect(() => {
+        if (!state.isLoggedIn && !window.location.href.includes('/auth')) {
+            window.location.href = '/auth'
+        }
+    }, [state.isLoggedIn])
+
     const onPopState = () => {
         appStore.dispatch({type: TYPES.REFRESH_COOKIES})
     }

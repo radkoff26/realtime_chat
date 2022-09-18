@@ -2,25 +2,38 @@
 
 .button {
   height: fit-content;
-  border-radius: 50px;
+  border-radius: 20px;
   font-weight: 600;
   text-align: center;
   outline: none;
-  border: none;
   cursor: pointer;
 }
 
 .buttonDefault {
-  width: 300px;
+  width: 250px;
   padding: 8px 6px;
-  font-size: 28px;
-  background: $green;
-  border: 2px solid $white;
+  font-size: 22px;
+  background: $bgc_main;
+  border: 1px solid $white;
+  transition: .5s;
+
+  &:hover {
+    background-color: $white;
+    color: $bgc_main;
+  }
 }
 
 .buttonWarning {
   width: 150px;
   padding: 8px 6px;
   font-size: 24px;
+  color: $white;
+  border: 1px solid rgba(255, 0, 0, 0.7);
   background: rgba(255, 0, 0, 0.7);
+  transition: .5s;
+
+  &:hover {
+    background-color: $white;
+    color: rgba(255, 0, 0, 0.7);
+  }
 }

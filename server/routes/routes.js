@@ -162,56 +162,130 @@ export default function (app, db) {
             res.status(400).send(dataError)
         }
     })
-    // Get chat by its code: GET {code}
-    app.get('/api/getChatByCode', async (req, res) => {
-        if (req.query.code) {
-            const database = db.db(dbInfo.db)
-            const chats = database.collection('chats')
-            const chat = await chats.findOne({chatCode: req.query.code})
-            if (chat) {
-                res.json(chat)
-            } else {
-                res.json('error')
-            }
-        } else {
-            res.json('error')
-        }
-    })
-    // Get all message by chat code: GET {code}
+    // Get all messages by chat code: GET {code}
     app.get('/api/getAllMessagesByChatCode', async (req, res) => {
         const code = req.query.code
         if (code) {
-            const database = db.db(dbInfo.db)
-            if (await dbIncludesCollection(database, code)) {
-                const chat = await database.collection(code)
-                const messages = chat.find({})
-                res.json(messages)
-            } else {
-                res.json('error')
+            try {
+                const database = db.db(dbInfo.db)
+                if (!(await dbIncludesCollection(database, code + constants.CHAT_POSTFIX_DIRECTIVES.CHAT_MESSAGES))) {
+                    res.status(404).send('Not found!')
+                    return
+                }
+                let cursor = database.collection(code + constants.CHAT_POSTFIX_DIRECTIVES.CHAT_MESSAGES).find({})
+                const messages = await cursor.toArray()
+                const users = await database.collection('users')
+
+                const map = new Map()
+
+                for (const message of messages) {
+                    if (!map.has(message.userId)) {
+                        const user = await users.findOne({_id: new ObjectId(message.userId)})
+                        map.set(message.userId, user.name)
+                    }
+                }
+
+                for (let i = 0; i < messages.length; i++) {
+                    messages[i].messageId = messages[i]._id.toHexString()
+                    messages[i].userName = map.get(messages[i].userId)
+                }
+
+                res.status(200).json(messages)
+            } catch {
+                res.status(500).send(serverError)
             }
         } else {
-            res.json('error')
+            res.status(400).send(dataError)
         }
     })
-    // Send message: POST {chatCode, authorId, text}
-    app.post('/api/sendMessage', async (req, res) => {
-        const authorId = req.body.authorId
-        const text = req.body.text
-        const code = req.body.chatCode
-        if (code && authorId && text) {
-            const database = db.db(dbInfo.db)
-            if (await dbIncludesCollection(database, code)) {
-                const chat = await database.collection(code)
-                const message = new Message(authorId, text, Date.now())
-                await chat.insertOne(message)
-                res.json('success')
-            } else {
-                console.log(2)
-                res.json('error')
+    // Get chat by its code: GET {code}
+    app.get('/api/getChatByCode', async (req, res) => {
+        const code = req.query.code
+        if (code) {
+            try {
+                const database = db.db(dbInfo.db)
+                if (!(await dbIncludesCollection(database, code + constants.CHAT_POSTFIX_DIRECTIVES.CHAT_MESSAGES))) {
+                    res.status(404).send('Not found!')
+                    return
+                }
+                const users = await database.collection('users')
+
+                let cursor = database.collection(code + constants.CHAT_POSTFIX_DIRECTIVES.CHAT_MESSAGES).find({})
+                const messages = await cursor.toArray()
+
+                for (let i = 0; i < messages.length; i++) {
+                    let user = await users.findOne({_id: new ObjectId(messages[i].userId)})
+                    messages[i].userName = user.name
+                    messages[i].messageId = messages[i]._id.toHexString()
+                }
+
+                cursor = database.collection(code + constants.CHAT_POSTFIX_DIRECTIVES.CHAT_PARTICIPANTS).find({})
+                const participants = await cursor.toArray()
+
+                for (let i = 0; i < participants.length; i++) {
+                    let user = await users.findOne({_id: new ObjectId(participants[i].id)})
+                    participants[i].name = user.name
+                }
+
+                let chat = await database.collection('chats').findOne({chatCode: code})
+
+                res.status(200).json({messages, participants, adminId: chat.adminId, name: chat.name, restriction: chat.participantsRestriction})
+            } catch (e) {
+                res.status(500).send(serverError)
+                throw e
             }
         } else {
-            console.log(1)
-            res.json('error')
+            res.status(400).send(dataError)
+        }
+    })
+    // Get all participants by chat code: GET {code}
+    app.get('/api/getAllParticipantsByChatCode', async (req, res) => {
+        const code = req.query.code
+        if (code) {
+            try {
+                const database = db.db(dbInfo.db)
+                if (!(await dbIncludesCollection(database, code + constants.CHAT_POSTFIX_DIRECTIVES.CHAT_PARTICIPANTS))) {
+                    res.status(404).send('Not found!')
+                    return
+                }
+                let cursor = database.collection(code + constants.CHAT_POSTFIX_DIRECTIVES.CHAT_PARTICIPANTS).find({})
+                const participants = await cursor.toArray()
+
+                const users = await database.collection('users')
+
+                for (let i = 0; i < participants.length; i++) {
+                    let user = await users.findOne({_id: new ObjectId(participants[i].id)})
+                    participants[i].name = user.name
+                }
+
+                res.status(200).json(participants)
+            } catch {
+                res.status(500).send(serverError)
+            }
+        } else {
+            res.status(400).send(dataError)
+        }
+    })
+    // Check if user is admin of server: GET {code, userId}
+    app.get('/api/isUserAdmin', async (req, res) => {
+        const code = req.query.code
+        const userId = req.query.userId
+        if (code && userId) {
+            try {
+                const database = db.db(dbInfo.db)
+
+                const chat = await database.collection('chats').findOne({chatCode: code})
+
+                if (userId === chat.adminId) {
+                    res.status(200).json({isAdmin: true})
+                } else {
+                    res.status(200).json({isAdmin: false})
+                }
+            } catch {
+                res.status(500).send(serverError)
+            }
+        } else {
+            res.status(400).send(dataError)
         }
     })
 }
