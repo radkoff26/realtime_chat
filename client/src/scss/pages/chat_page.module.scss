@@ -97,13 +97,34 @@
     }
 
     &__input {
+      display: flex;
+      justify-content: center;
+      align-items: center;
       position: absolute;
       left: 0;
       bottom: 0;
       height: 54px;
       width: 100%;
       margin: auto;
-      background-color: #cccccc;
+      padding: 0 16px 8px;
+      gap: 12px;
+
+      textarea {
+        width: calc(100% - 36px) !important;
+      }
+
+      button {
+        height: 36px;
+        width: 36px;
+        background-image: url("../../assets/send.png");
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-color: transparent;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+        color: #FFFFFF;
+      }
     }
   }
 }

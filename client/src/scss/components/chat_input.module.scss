@@ -1,0 +1,14 @@
+textarea.input {
+  height: 100%;
+  width: 80%;
+  resize: none;
+  outline: none;
+  border-radius: 12px;
+  padding: 10px 16px;
+  font-size: 20px;
+  word-break: break-all;
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #cccccc;
+  }
+}

@@ -26,6 +26,7 @@ const ChatPage = () => {
     const [hasJoined, setJoined] = useState(false)
     const [isExpanded, setExpanded] = useState(false)
     const [code, setCode] = useState('')
+    const [pressedKeys, setPressedKeys] = useState(new Set<string>())
 
     useEffect(() => {
         setConnection(io("http://localhost:8000", {
@@ -63,6 +64,24 @@ const ChatPage = () => {
         }
     }, [connection])
 
+    const sendMessage = () => {
+        if (input.current?.value && Cookie.getCookie(constants.COOKIE.ID)) {
+            connection?.emit(constants.EVENTS.SERVER.SEND_MESSAGE, Cookie.getCookie(constants.COOKIE.ID), code, input.current.value)
+            input.current.value = ''
+        }
+    }
+
+    const handleShiftEnterPressAndSend = (e: KeyboardEvent) => {
+        pressedKeys.add(e.key)
+        if (pressedKeys.has("Shift") && pressedKeys.has("Enter")) {
+            sendMessage()
+        }
+        console.log(pressedKeys)
+    }
+    const removeKey = (e: KeyboardEvent) => {
+        pressedKeys.delete(e.key)
+    }
+
     useEffect(() => {
         const id = Cookie.getCookie(constants.COOKIE.ID) ?? ''
         dispatch(loadData(code, id) as unknown as Action)
@@ -81,14 +100,16 @@ const ChatPage = () => {
             console.log('new message')
             dispatch(updateMessages(code) as unknown as Action)
         })
+
+        input.current?.addEventListener('change', changeHandler)
     }, [hasJoined])
 
-    const sendMessage = () => {
-        console.log(input.current?.value)
-        if (input.current?.value && Cookie.getCookie(constants.COOKIE.ID)) {
-            connection?.emit(constants.EVENTS.SERVER.SEND_MESSAGE, Cookie.getCookie(constants.COOKIE.ID), code, input.current.value)
-            input.current.value = ''
-        }
+    const changeHandler = () => {
+        window.removeEventListener('keydown', handleShiftEnterPressAndSend)
+        window.removeEventListener('keyup', removeKey)
+
+        window.addEventListener('keydown', handleShiftEnterPressAndSend)
+        window.addEventListener('keyup', removeKey)
     }
 
     const acceptParticipant = (code: string, id: string) => {
@@ -111,7 +132,8 @@ const ChatPage = () => {
                             </div>
                             <div
                                 className={[styles.chat_participants__container, scrollable.scrollable, styles.container].join(" ")}>
-                                <div className={styles.title}><p>Participants</p><p>{selector.participants.filter(it => !it.isPending).length}</p></div>
+                                <div className={styles.title}><p>Participants</p>
+                                    <p>{selector.participants.filter(it => !it.isPending).length}</p></div>
                                 {
                                     selector.participants.filter(it => !it.isPending).map(it => {
                                         return (
@@ -126,7 +148,8 @@ const ChatPage = () => {
                                     selector.adminId === Cookie.getCookie(constants.COOKIE.ID) &&
                                     (
                                         <>
-                                            <div className={styles.title}><p>Pending</p><p>{selector.participants.filter(it => it.isPending).length}</p></div>
+                                            <div className={styles.title}><p>Pending</p>
+                                                <p>{selector.participants.filter(it => it.isPending).length}</p></div>
                                             {selector.participants.filter(it => it.isPending).map(it => {
                                                 return (
                                                     <ParticipantItem
@@ -164,7 +187,7 @@ const ChatPage = () => {
                             </div>
                             <div className={styles.chat_content__input}>
                                 <ChatInput ref={input}/>
-                                <button onClick={() => sendMessage()}>Submit</button>
+                                <button onClick={() => sendMessage()}/>
                             </div>
                         </div>
                     </div>
