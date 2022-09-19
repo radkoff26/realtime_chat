@@ -94,6 +94,7 @@ io.on(EVENTS_SERVER.CONNECTION, (socket) => {
             const participants = await database.collection(chatCode + '_participants');
             const users = await database.collection('users');
             const chat = await database.collection('chats').findOne({chatCode})
+            let error = ''
 
             if (chat && userId) {
                 const user = await users.findOne({_id: new ObjectId(userId)})
@@ -114,14 +115,23 @@ io.on(EVENTS_SERVER.CONNECTION, (socket) => {
 
                 if (!currentChatCode || (currentChatCode && currentChatCode !== chatCode)) {
                     await users.updateOne({_id: new ObjectId(userId)}, {$set: {currentChatCode: chatCode}})
-                    await participants.insertOne(new Participant(userId, user.name, !chat.isPublic && userId !== chat.adminId))
+                    const restriction = chat.participantsRestriction
+                    if (await participants.countDocuments() >= restriction && userId !== chat.adminId) {
+                        error = 'The chat is full!'
+                    } else {
+                        await participants.insertOne(new Participant(userId, user.name, !chat.isPublic && userId !== chat.adminId))
+                    }
                 }
 
                 socket.join(chatCode)
                 socket.to(chatCode).emit(EVENTS_CLIENT.NEW_JOIN)
-                io.to(chatCode).emit(EVENTS_CLIENT.JOINED, {userId, flag: !(!chat.isPublic && userId !== chat.adminId)})
+                io.to(chatCode).emit(EVENTS_CLIENT.JOINED, {
+                    userId,
+                    flag: !(!chat.isPublic && userId !== chat.adminId),
+                    error
+                })
             } else {
-                io.to(chatCode).emit(EVENTS_CLIENT.JOINED, {userId: '', flag: false})
+                io.to(chatCode).emit(EVENTS_CLIENT.JOINED, {userId: '', flag: false, error: ''})
             }
         })
     });
@@ -156,7 +166,17 @@ io.on(EVENTS_SERVER.CONNECTION, (socket) => {
             if (code && id) {
                 if (await dbIncludesCollection(database, code + "_participants")) {
                     const participants = await database.collection(code + "_participants")
+
+                    const chat = await database.collection('chats').findOne({chatCode: code})
+                    const count = await participants.countDocuments({isPending: false})
+                    console.log(count, chat.participantsRestriction)
+                    if (count >= chat.participantsRestriction) {
+                        io.to(code).emit(EVENTS_CLIENT.JOINED, {userId: id, flag: false, error: 'The chat is full!'})
+                        return
+                    }
+
                     await participants.updateOne({id}, {$set: {isPending: false}})
+
                     io.to(code).emit(EVENTS_CLIENT.JOINED, {userId: id, flag: true})
                     io.to(code).emit(EVENTS_CLIENT.NEW_JOIN)
                 }

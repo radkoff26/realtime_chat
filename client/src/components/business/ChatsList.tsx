@@ -2,6 +2,7 @@ import React from 'react';
 import {Chat} from "../../models/Chat";
 import {Link} from "react-router-dom";
 import styles from '../../scss/components/chat_list.module.scss'
+import lock from '../../assets/lock.png'
 
 export interface ChatsListProps {
     list: Chat[]
@@ -17,7 +18,7 @@ const ChatsList = ({list, isLoaded, textIfEmpty}: ChatsListProps) => {
                 console.log(chat)
                 return (
                     <Link to={'/chat/' + chat.chatCode.toLowerCase()} className={styles.chat_list__item} key={chat.chatCode}>
-                        <div className={styles.chat_list__item__name}>{chat.name}</div>
+                        <div className={styles.chat_list__item__name}>{chat.name}{!chat.isPublic && <img src={lock} alt={'private'}/>}</div>
                         <div className={styles.chat_list__item__participants}>{chat.currentNumberOfParticipants}/{chat.participantsRestriction}</div>
                         <div className={styles.chat_list__item__code}>Code: {chat.chatCode.toUpperCase()}</div>
                         <div className={styles.chat_list__item__language}>{chat.language}</div>

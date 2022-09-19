@@ -144,7 +144,7 @@ export default function (app, db) {
                         const chat = chats[i]
                         const collectionName = chat.chatCode + constants.CHAT_POSTFIX_DIRECTIVES.CHAT_PARTICIPANTS
                         if (await dbIncludesCollection(database, collectionName)) {
-                            chats[i].currentNumberOfParticipants = await database.collection(collectionName).countDocuments()
+                            chats[i].currentNumberOfParticipants = await database.collection(collectionName).countDocuments({isPending: false})
                             i++
                         } else {
                             chats.splice(i, 1)

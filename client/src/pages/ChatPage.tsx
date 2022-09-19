@@ -27,6 +27,7 @@ const ChatPage = () => {
     const [isExpanded, setExpanded] = useState(false)
     const [code, setCode] = useState('')
     const [pressedKeys, setPressedKeys] = useState(new Set<string>())
+    const [error, setError] = useState('')
 
     useEffect(() => {
         setConnection(io("http://localhost:8000", {
@@ -48,12 +49,19 @@ const ChatPage = () => {
         connection?.on(constants.EVENTS.CLIENT.JOINED, (data) => {
             const userId = data['userId']
             const flag = data['flag']
+            const error = data['error']
             console.log(data)
             if (userId === id) {
-                if (flag) {
-                    setJoined(true)
+                if (error) {
+                    setError(error)
+                    connection?.disconnect()
                 } else {
-                    dispatch(chatSlice.actions.onUserPending())
+                    if (flag) {
+                        setJoined(true)
+                    } else {
+                        dispatch(chatSlice.actions.onUserPending())
+                    }
+                    setError('')
                 }
             }
         })
@@ -126,76 +134,81 @@ const ChatPage = () => {
     return (
         <>
             {
-                connection && !selector.isCurrentUserPending ?
-                    <div className={styles.chat}>
-                        <div className={[styles.chat_participants, isExpanded && styles.expanded].join(" ")}>
-                            <div className={styles.chat_participants__turn + " " + styles.turn}
-                                 onClick={() => setExpanded(state => !state)}>
-                                <img src={turn} alt="turn"/>
-                            </div>
-                            <div
-                                className={[styles.chat_participants__container, scrollable.scrollable, styles.container].join(" ")}>
-                                <div className={styles.title}><p>Participants</p>
-                                    <p>{selector.participants.filter(it => !it.isPending).length}</p></div>
-                                {
-                                    selector.participants.filter(it => !it.isPending).map(it => {
-                                        return (
-                                            <ParticipantItem
-                                                participant={it}
-                                                key={it.id}
-                                            />
-                                        )
-                                    })
-                                }
-                                {
-                                    selector.adminId === Cookie.getCookie(constants.COOKIE.ID) &&
-                                    (
-                                        <>
-                                            <div className={styles.title}><p>Pending</p>
-                                                <p>{selector.participants.filter(it => it.isPending).length}</p></div>
-                                            {selector.participants.filter(it => it.isPending).map(it => {
+                error ?
+                    <h1>{error}</h1> :
+                    (
+                        connection && !selector.isCurrentUserPending ?
+                            <div className={styles.chat}>
+                                <div className={[styles.chat_participants, isExpanded && styles.expanded].join(" ")}>
+                                    <div className={styles.chat_participants__turn + " " + styles.turn}
+                                         onClick={() => setExpanded(state => !state)}>
+                                        <img src={turn} alt="turn"/>
+                                    </div>
+                                    <div
+                                        className={[styles.chat_participants__container, scrollable.scrollable, styles.container].join(" ")}>
+                                        <div className={styles.title}><p>Participants</p>
+                                            <p>{selector.participants.filter(it => !it.isPending).length}</p></div>
+                                        {
+                                            selector.participants.filter(it => !it.isPending).map(it => {
                                                 return (
                                                     <ParticipantItem
                                                         participant={it}
                                                         key={it.id}
-                                                        acceptIfPendingAndAdmin={acceptParticipant(code, it.id)}
                                                     />
                                                 )
-                                            })}
-                                        </>
-                                    )
-                                }
-                            </div>
-                            <div className={styles.chat_participants__overall_participants}>
-                                <div/>
-                                <p>{selector.participants.filter(it => !it.isPending).length}/{selector.restriction}</p>
-                            </div>
-                        </div>
-                        <div className={styles.chat_content}>
-                            <div className={styles.chat_content__messages + " " + scrollable.scrollable}>
-                                <div className={styles.chat_content__messages__container}>
-                                    {selector.messages.map(it => {
-                                        return <ChatItem
-                                            key={it.messageId}
-                                            userName={it.userName}
-                                            messageText={it.messageText}
-                                            time={+it.time}
-                                            isUserMessage={Cookie.getCookie(constants.COOKIE.ID) == it.userId}
-                                            messageId={it.messageId}
-                                            userId={it.userId}
-                                        />
-                                    })
-                                    }
+                                            })
+                                        }
+                                        {
+                                            selector.adminId === Cookie.getCookie(constants.COOKIE.ID) &&
+                                            (
+                                                <>
+                                                    <div className={styles.title}><p>Pending</p>
+                                                        <p>{selector.participants.filter(it => it.isPending).length}</p>
+                                                    </div>
+                                                    {selector.participants.filter(it => it.isPending).map(it => {
+                                                        return (
+                                                            <ParticipantItem
+                                                                participant={it}
+                                                                key={it.id}
+                                                                acceptIfPendingAndAdmin={acceptParticipant(code, it.id)}
+                                                            />
+                                                        )
+                                                    })}
+                                                </>
+                                            )
+                                        }
+                                    </div>
+                                    <div className={styles.chat_participants__overall_participants}>
+                                        <div/>
+                                        <p>{selector.participants.filter(it => !it.isPending).length}/{selector.restriction}</p>
+                                    </div>
+                                </div>
+                                <div className={styles.chat_content}>
+                                    <div className={styles.chat_content__messages + " " + scrollable.scrollable}>
+                                        <div className={styles.chat_content__messages__container}>
+                                            {selector.messages.map(it => {
+                                                return <ChatItem
+                                                    key={it.messageId}
+                                                    userName={it.userName}
+                                                    messageText={it.messageText}
+                                                    time={+it.time}
+                                                    isUserMessage={Cookie.getCookie(constants.COOKIE.ID) == it.userId}
+                                                    messageId={it.messageId}
+                                                    userId={it.userId}
+                                                />
+                                            })
+                                            }
+                                        </div>
+                                    </div>
+                                    <div className={styles.chat_content__input}>
+                                        <ChatInput onChange={changeHandler} ref={input}/>
+                                        <button onClick={() => sendMessage()}/>
+                                    </div>
                                 </div>
                             </div>
-                            <div className={styles.chat_content__input}>
-                                <ChatInput onChange={changeHandler} ref={input}/>
-                                <button onClick={() => sendMessage()}/>
-                            </div>
-                        </div>
-                    </div>
-                    :
-                    <Loader/>
+                            :
+                            <Loader/>
+                    )
             }
         </>
     );
