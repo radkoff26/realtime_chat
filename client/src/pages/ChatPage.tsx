@@ -1,4 +1,4 @@
-import React, {createRef, TextareaHTMLAttributes, useEffect, useRef, useState} from 'react';
+import React, {createRef, useEffect, useState} from 'react';
 import {useParams} from "react-router-dom";
 import styles from '../scss/pages/chat_page.module.scss'
 import scrollable from '../scss/components/scrollable.module.scss'
@@ -66,6 +66,7 @@ const ChatPage = () => {
 
     const sendMessage = () => {
         if (input.current?.value && Cookie.getCookie(constants.COOKIE.ID)) {
+            console.log(input.current.value.includes('\n'))
             connection?.emit(constants.EVENTS.SERVER.SEND_MESSAGE, Cookie.getCookie(constants.COOKIE.ID), code, input.current.value)
             input.current.value = ''
         }
@@ -74,7 +75,9 @@ const ChatPage = () => {
     const handleShiftEnterPressAndSend = (e: KeyboardEvent) => {
         pressedKeys.add(e.key)
         if (pressedKeys.has("Shift") && pressedKeys.has("Enter")) {
+        } else if (pressedKeys.has("Enter")) {
             sendMessage()
+            e.preventDefault()
         }
         console.log(pressedKeys)
     }
@@ -186,7 +189,7 @@ const ChatPage = () => {
                                 </div>
                             </div>
                             <div className={styles.chat_content__input}>
-                                <ChatInput ref={input}/>
+                                <ChatInput onChange={changeHandler} ref={input}/>
                                 <button onClick={() => sendMessage()}/>
                             </div>
                         </div>
